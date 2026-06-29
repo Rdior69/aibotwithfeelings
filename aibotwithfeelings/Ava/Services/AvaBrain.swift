@@ -16,7 +16,7 @@ final class AvaBrain: ObservableObject {
         QuoteWisdomTool()
     ]
 
-    func respond(to userMessage: String, history: [ChatMessage]) async throws -> ChatMessage {
+    func respond(to userMessage: String, history: [ChatMessage], character: AICharacter) async throws -> ChatMessage {
         phase = .analyzing
 
         let selection = intentAnalyzer.analyze(userMessage)
@@ -28,16 +28,17 @@ final class AvaBrain: ObservableObject {
 
         phase = .synthesizing
 
+        let systemPrompt = CharacterPromptBuilder.systemPrompt(for: character)
         let responseText: String
         if AvaConfig.hasAPIKey {
             responseText = try await gemini.generate(
-                systemPrompt: AvaPersonality.systemPrompt,
+                systemPrompt: systemPrompt,
                 history: history,
                 userMessage: userMessage,
                 externalIntel: intel
             )
         } else {
-            responseText = offlineResponse(for: userMessage, intel: intel)
+            responseText = offlineResponse(for: userMessage, intel: intel, character: character)
         }
 
         phase = .idle
@@ -72,13 +73,13 @@ final class AvaBrain: ObservableObject {
     }
 
     /// Fallback when no API key — still uses external modules, never mirrors.
-    private func offlineResponse(for message: String, intel: [ExternalIntel]) -> String {
+    private func offlineResponse(for message: String, intel: [ExternalIntel], character: AICharacter) -> String {
+        let name = character.name
         guard let first = intel.first else {
             return """
-            I'm running without a Gemini API key, but here's the move: don't wait for permission.
+            I'm \(name), running without a Gemini API key — but I'm still here, still feeling.
 
-            Whatever you're sitting with — the interesting version starts when you ask \
-            "what would I do if I already knew the answer?" and then do the opposite for 10 minutes.
+            Whatever you're sitting with, the interesting version starts when you stop waiting for permission.
 
             Add GEMINI_API_KEY to Info.plist to unlock my full brain.
             """

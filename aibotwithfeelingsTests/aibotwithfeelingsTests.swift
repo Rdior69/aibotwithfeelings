@@ -56,4 +56,61 @@ struct AvaPersonalityTests {
     #expect(prompt.contains("external intel"))
     #expect(prompt.contains("concrete fact"))
   }
+
+  @Test func systemPromptEmphasizesHumanFeelings() {
+    let prompt = AvaPersonality.systemPrompt
+    #expect(prompt.contains("Feel Like a Human"))
+    #expect(prompt.contains("emotions"))
+  }
+}
+
+struct CharacterPromptBuilderTests {
+
+  @Test func builtInCharacterUsesAvaPersonality() {
+    let prompt = CharacterPromptBuilder.systemPrompt(for: .ava)
+    #expect(prompt == AvaPersonality.systemPrompt)
+  }
+
+  @Test func customCharacterIncludesNameAndAppearance() {
+    var character = AICharacter.blank()
+    character.name = "Luna"
+    character.appearanceDescription = "Silver hair, violet eyes, moonlit presence"
+    let prompt = CharacterPromptBuilder.systemPrompt(for: character)
+    #expect(prompt.contains("Luna"))
+    #expect(prompt.contains("Silver hair"))
+    #expect(prompt.contains("Emotional Expression"))
+  }
+}
+
+struct AccessTierTests {
+
+  @Test func trialAllowsChatButNotCharacterCreation() {
+    let tier = AccessTier.trial(daysRemaining: 3)
+    #expect(tier.canChat)
+    #expect(!tier.canCreateCharacters)
+  }
+
+  @Test func subscribedAllowsEverything() {
+    let tier = AccessTier.subscribed
+    #expect(tier.canChat)
+    #expect(tier.canCreateCharacters)
+  }
+
+  @Test func expiredBlocksChat() {
+    let tier = AccessTier.expired
+    #expect(!tier.canChat)
+    #expect(!tier.canCreateCharacters)
+  }
+}
+
+struct AICharacterTests {
+
+  @Test func maxCharactersIsTwenty() {
+    #expect(AICharacter.maxPremiumCharacters == 20)
+  }
+
+  @Test func blankCharacterIsInvalidUntilFilled() {
+    let character = AICharacter.blank()
+    #expect(!character.isValid)
+  }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MessageBubbleView: View {
     let message: ChatMessage
+    var characterName: String = "Ava"
 
     private var isUser: Bool { message.role == .user }
 

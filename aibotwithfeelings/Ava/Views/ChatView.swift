@@ -1,17 +1,26 @@
 import SwiftUI
 
 struct ChatView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = ChatViewModel()
     @FocusState private var isInputFocused: Bool
+
+    private var character: AICharacter {
+        appState.characterStore.activeCharacter
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                if !appState.canChat {
+                    expiredBanner
+                }
+
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(viewModel.messages) { message in
-                                MessageBubbleView(message: message)
+                                MessageBubbleView(message: message, characterName: character.name)
                                     .id(message.id)
                             }
 
@@ -31,40 +40,73 @@ struct ChatView: View {
                 Divider()
 
                 HStack(spacing: 12) {
-                    TextField("Say something Ava won't just echo back...", text: $viewModel.inputText, axis: .vertical)
+                    TextField("Talk to \(character.name)...", text: $viewModel.inputText, axis: .vertical)
                         .textFieldStyle(.plain)
                         .lineLimit(1...5)
                         .focused($isInputFocused)
-                        .onSubmit {
-                            Task { await viewModel.send() }
-                        }
+                        .disabled(!appState.canChat)
+                        .onSubmit { send() }
 
-                    Button {
-                        Task { await viewModel.send() }
-                    } label: {
+                    Button(action: send) {
                         Image(systemName: "arrow.up.circle.fill")
                             .font(.title2)
                             .symbolRenderingMode(.hierarchical)
                     }
-                    .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isProcessing)
+                    .disabled(
+                        viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        || viewModel.isProcessing
+                        || !appState.canChat
+                    )
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 10)
                 .background(.bar)
             }
-            .navigationTitle("Ava")
+            .navigationTitle(character.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     VStack(spacing: 2) {
-                        Text("Ava")
+                        Text("\(character.avatarEmoji) \(character.name)")
                             .font(.headline)
-                        Text("Thinks outside the echo chamber")
+                        Text(appState.accessTier.displayLabel)
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
                 }
             }
+            .onAppear {
+                viewModel.loadConversation(for: character)
+            }
+            .onChange(of: character.id) { _, _ in
+                viewModel.loadConversation(for: character)
+            }
+        }
+    }
+
+    private var expiredBanner: some View {
+        Button {
+            appState.showPaywall = true
+        } label: {
+            HStack {
+                Image(systemName: "lock.fill")
+                Text("Trial ended — Subscribe to keep chatting")
+                    .font(.subheadline.bold())
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.orange.opacity(0.15))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func send() {
+        guard appState.requireChatAccess() else { return }
+        Task {
+            await viewModel.send(
+                character: character,
+                canChat: appState.canChat
+            )
         }
     }
 
@@ -81,4 +123,5 @@ struct ChatView: View {
 
 #Preview {
     ChatView()
+        .environmentObject(AppState())
 }
