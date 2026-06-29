@@ -1,19 +1,25 @@
 import Foundation
 import SwiftUI
 
-/// Central access control: 5-day Ava trial OR $39.99/mo premium for custom characters.
+/// Central access control — entirely driven by StoreKit subscription state.
 @MainActor
 final class AppState: ObservableObject {
     let subscriptionManager = SubscriptionManager()
-    let trialManager = TrialManager()
     let characterStore = CharacterStore()
 
     @Published var showPaywall = false
 
-    var accessTier: AccessTier { trialManager.tier }
-    var canChat: Bool { trialManager.canChat }
-    var canCreateCharacters: Bool { trialManager.canCreateCharacters }
-    var isPremium: Bool { trialManager.tier == .subscribed }
+    var accessTier: AccessTier { subscriptionManager.accessTier }
+    var canChat: Bool { subscriptionManager.accessTier.canChat }
+    var canCreateCharacters: Bool { subscriptionManager.accessTier.canCreateCharacters }
+    var isPremium: Bool { subscriptionManager.isPremium }
+    var isInTrial: Bool { subscriptionManager.isInTrial }
+    var needsOnboarding: Bool {
+        switch subscriptionManager.accessTier {
+        case .none: return true
+        case .trial, .premium, .expired: return false
+        }
+    }
 
     init() {
         Task { await refreshAccess() }
@@ -21,7 +27,11 @@ final class AppState: ObservableObject {
 
     func refreshAccess() async {
         await subscriptionManager.refreshSubscriptionStatus()
-        trialManager.refresh(isSubscribed: subscriptionManager.isSubscribed)
+
+        // If user lost premium, fall back to Ava.
+        if !isPremium && !characterStore.activeCharacter.isBuiltIn {
+            characterStore.select(.ava)
+        }
     }
 
     func requireChatAccess() -> Bool {

@@ -7,7 +7,7 @@ struct CharacterListView: View {
 
     var body: some View {
         List {
-            Section("Included in Trial") {
+            Section("Ava — Included in Your Trial") {
                 characterRow(.ava)
             }
 
@@ -32,7 +32,11 @@ struct CharacterListView: View {
                 } header: {
                     Text("Custom Characters — Premium")
                 } footer: {
-                    Text("5-day free trial includes full Ava access. Subscribe at \(SubscriptionConfig.monthlyPriceDisplay)/mo to create up to \(AICharacter.maxPremiumCharacters) tailored characters.")
+                    if appState.isInTrial, case .trial(let days) = appState.accessTier {
+                        Text("Your free trial (\(days) day\(days == 1 ? "" : "s") left) includes full Ava access. Custom characters unlock automatically when your trial converts to \(SubscriptionConfig.monthlyPriceDisplay)/mo.")
+                    } else {
+                        Text("Start your \(SubscriptionConfig.trialDays)-day free trial to chat with Ava. Custom characters unlock with premium.")
+                    }
                 }
             }
 

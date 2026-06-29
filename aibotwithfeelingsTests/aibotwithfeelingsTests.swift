@@ -84,14 +84,20 @@ struct CharacterPromptBuilderTests {
 
 struct AccessTierTests {
 
+  @Test func noneBlocksAccess() {
+    let tier = AccessTier.none
+    #expect(!tier.canChat)
+    #expect(!tier.canCreateCharacters)
+  }
+
   @Test func trialAllowsChatButNotCharacterCreation() {
     let tier = AccessTier.trial(daysRemaining: 3)
     #expect(tier.canChat)
     #expect(!tier.canCreateCharacters)
   }
 
-  @Test func subscribedAllowsEverything() {
-    let tier = AccessTier.subscribed
+  @Test func premiumAllowsEverything() {
+    let tier = AccessTier.premium
     #expect(tier.canChat)
     #expect(tier.canCreateCharacters)
   }

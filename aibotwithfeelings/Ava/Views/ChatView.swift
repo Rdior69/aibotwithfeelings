@@ -90,7 +90,7 @@ struct ChatView: View {
         } label: {
             HStack {
                 Image(systemName: "lock.fill")
-                Text("Trial ended — Subscribe to keep chatting")
+                Text("Trial ended — Resubscribe to keep chatting")
                     .font(.subheadline.bold())
             }
             .frame(maxWidth: .infinity)
