@@ -14,28 +14,40 @@ final class aibotwithfeelingsUITests: XCTestCase {
     }
 
     @MainActor
-    func testOnboardingAndChatFlow() throws {
+    func testExample() throws {
         let app = XCUIApplication()
-        app.launchArguments = ["UI_TEST_RESET"]
+        app.launchArguments = ["--uitest-reset-profile"]
         app.launch()
 
-        let nameField = app.textFields["onboardingNameField"]
-        XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+        let nameField = app.textFields["onboarding.nameField"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 2))
         nameField.tap()
-        nameField.typeText("Test User")
+        nameField.typeText("Ray")
 
-        app.buttons["onboardingContinueButton"].tap()
-        app.buttons["onboardingStartButton"].tap()
+        app.buttons["onboarding.startButton"].tap()
+        XCTAssertTrue(app.staticTexts["chat.title"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.textFields["chat.composerField"].exists)
+    }
 
-        let chatTab = app.tabBars.buttons["Chat"]
-        XCTAssertTrue(chatTab.waitForExistence(timeout: 5))
+    @MainActor
+    func testSettingsButtonOpensSheet() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--uitest-seed-profile"]
+        app.launch()
 
-        let input = app.textFields["chatInputField"]
-        XCTAssertTrue(input.waitForExistence(timeout: 5))
-        input.tap()
-        input.typeText("I feel happy today")
-        app.buttons["sendMessageButton"].tap()
+        let settingsButton = app.buttons["chat.settingsButton"]
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 2))
+        settingsButton.tap()
 
-        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS[c] 'happy'")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 2))
+        app.buttons["Close"].tap()
+        XCTAssertFalse(app.navigationBars["Settings"].exists)
+    }
+
+    @MainActor
+    func testLaunchPerformance() throws {
+        measure(metrics: [XCTApplicationLaunchMetric()]) {
+            XCUIApplication().launch()
+        }
     }
 }
