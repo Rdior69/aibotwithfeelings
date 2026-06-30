@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @ObservedObject var appViewModel: AppViewModel
+    @Bindable var appViewModel: AppViewModel
 
     @State private var name: String = ""
     @State private var tone: CompanionTone = .supportive

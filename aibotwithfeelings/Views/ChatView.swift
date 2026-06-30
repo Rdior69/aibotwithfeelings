@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct ChatView: View {
-    @ObservedObject var viewModel: ChatViewModel
+    @Bindable var viewModel: ChatViewModel
 
     var body: some View {
         VStack(spacing: 12) {

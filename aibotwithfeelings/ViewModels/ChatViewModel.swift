@@ -4,13 +4,15 @@
 //
 
 import Foundation
+import Observation
 
 @MainActor
-final class ChatViewModel: ObservableObject {
-    @Published var messages: [ChatMessage] = []
-    @Published var draft: String = ""
-    @Published var isResponding: Bool = false
-    @Published var currentEmotion: EmotionState = .neutral
+@Observable
+final class ChatViewModel {
+    var messages: [ChatMessage] = []
+    var draft: String = ""
+    var isResponding: Bool = false
+    var currentEmotion: EmotionState = .neutral
 
     private var profile: UserProfile?
     private let aiService: AICompanionServing

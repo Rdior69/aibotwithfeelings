@@ -4,11 +4,13 @@
 //
 
 import Foundation
+import Observation
 
 @MainActor
-final class AppViewModel: ObservableObject {
-    @Published private(set) var profile: UserProfile?
-    @Published private(set) var hasCompletedOnboarding: Bool
+@Observable
+final class AppViewModel {
+    private(set) var profile: UserProfile?
+    private(set) var hasCompletedOnboarding: Bool
 
     let chatViewModel: ChatViewModel
 

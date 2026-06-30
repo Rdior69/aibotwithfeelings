@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var appViewModel = AppViewModel()
+    @State private var appViewModel = AppViewModel()
     @State private var isShowingSettings = false
 
     var body: some View {

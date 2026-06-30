@@ -7,7 +7,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var appViewModel: AppViewModel
+    @Bindable var appViewModel: AppViewModel
 
     @State private var name: String = ""
     @State private var tone: CompanionTone = .supportive
