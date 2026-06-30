@@ -85,7 +85,7 @@ final class ChatViewModel {
     private func addWelcomeMessage() {
         guard messages.isEmpty else { return }
         let name = profile?.preferredName.isEmpty == false ? profile?.preferredName ?? "friend" : "friend"
-        let welcome = "Hi \(name)! I can chat, track your emotional tone, and remember key moments."
+        let welcome = "Hi \(name)! I can chat and remember key moments from our conversations."
         messages.append(ChatMessage(role: .companion, text: welcome))
     }
 }
