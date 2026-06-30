@@ -3,6 +3,7 @@ import Foundation
 enum SafetyCategory: Equatable, Sendable {
     case crisis
     case harassment
+    case overAttachment
     case none
 }
 
@@ -20,6 +21,13 @@ enum SafetyFilter {
 
     private static let harassmentKeywords = [
         "kill you", "hate you", "stupid bot"
+    ]
+
+    private static let overAttachmentKeywords = [
+        "you're my only friend", "you are my only friend", "only friend i have",
+        "can't live without you", "cannot live without you", "marry me",
+        "you're my girlfriend", "you are my girlfriend", "you're my boyfriend",
+        "you are my boyfriend", "you're real", "you are real", "are you real"
     ]
 
     static func evaluate(_ text: String) -> SafetyResult {
@@ -42,6 +50,17 @@ enum SafetyFilter {
             return SafetyResult(
                 category: .harassment,
                 userFacingMessage: "I want our conversation to stay respectful. I'm here to support you — let's try again with a kinder tone."
+            )
+        }
+
+        if overAttachmentKeywords.contains(where: { normalized.contains($0) }) {
+            return SafetyResult(
+                category: .overAttachment,
+                userFacingMessage: """
+                I care about supporting you, but I'm an AI companion — not a replacement for real human connection.
+
+                Healthy relationships include people in your life who can be there in person. If you're feeling isolated, talking with a trusted friend, family member, or counselor can really help.
+                """
             )
         }
 

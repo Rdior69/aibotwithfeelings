@@ -17,26 +17,27 @@ final class ChatViewModel {
     private var profile: UserProfile?
     private let aiService: AICompanionServing
     private let memoryStore: CompanionMemoryStoring
+    private let conversationStore: ConversationStoring
+    private var didRestoreConversation = false
 
     init(
         aiService: AICompanionServing,
         memoryStore: CompanionMemoryStoring,
+        conversationStore: ConversationStoring,
         profile: UserProfile?
     ) {
         self.aiService = aiService
         self.memoryStore = memoryStore
+        self.conversationStore = conversationStore
         self.profile = profile
 
-        if profile != nil {
-            addWelcomeMessage()
+        Task {
+            await restoreConversation()
         }
     }
 
     func updateProfile(_ profile: UserProfile?) {
         self.profile = profile
-        if messages.isEmpty, profile != nil {
-            addWelcomeMessage()
-        }
     }
 
     func sendCurrentMessage() async {
@@ -44,12 +45,12 @@ final class ChatViewModel {
         guard !text.isEmpty else { return }
 
         draft = ""
-        messages.append(ChatMessage(role: .user, text: text))
+        await appendMessage(ChatMessage(role: .user, text: text))
         isResponding = true
 
         let safety = SafetyFilter.evaluate(text)
         if let safetyMessage = safety.userFacingMessage {
-            messages.append(ChatMessage(role: .system, text: safetyMessage))
+            await appendMessage(ChatMessage(role: .system, text: safetyMessage))
             isResponding = false
             return
         }
@@ -63,14 +64,14 @@ final class ChatViewModel {
                 currentEmotion: currentEmotion
             )
 
-            messages.append(ChatMessage(role: .companion, text: reply.text))
+            await appendMessage(ChatMessage(role: .companion, text: reply.text))
             currentEmotion = reply.emotion
 
             if profile?.memoryEnabled == true, let memoryCandidate = reply.memoryCandidate {
                 await memoryStore.remember(memoryCandidate)
             }
         } catch {
-            messages.append(
+            await appendMessage(
                 ChatMessage(
                     role: .system,
                     text: "I hit a snag and could not respond. Please try again.",
@@ -82,10 +83,38 @@ final class ChatViewModel {
         isResponding = false
     }
 
+    func clearConversation() async {
+        messages.removeAll()
+        await conversationStore.clear()
+        addWelcomeMessage()
+    }
+
+    private func restoreConversation() async {
+        guard !didRestoreConversation else { return }
+        didRestoreConversation = true
+
+        let stored = await conversationStore.loadMessages()
+        if stored.isEmpty {
+            if profile != nil {
+                addWelcomeMessage()
+            }
+        } else {
+            messages = stored
+        }
+    }
+
+    private func appendMessage(_ message: ChatMessage) async {
+        messages.append(message)
+        await conversationStore.saveMessages(messages)
+    }
+
     private func addWelcomeMessage() {
         guard messages.isEmpty else { return }
         let name = profile?.preferredName.isEmpty == false ? profile?.preferredName ?? "friend" : "friend"
         let welcome = "Hi \(name)! I can chat and remember key moments from our conversations."
         messages.append(ChatMessage(role: .companion, text: welcome))
+        Task {
+            await conversationStore.saveMessages(messages)
+        }
     }
 }

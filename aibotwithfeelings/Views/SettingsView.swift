@@ -27,6 +27,15 @@ struct SettingsView: View {
                     Toggle("Remember key moments", isOn: $memoryEnabled)
                     Toggle("Daily check-ins", isOn: $checkInEnabled)
                 }
+
+                Section("Data controls") {
+                    Button("Clear remembered moments", role: .destructive) {
+                        Task { await appViewModel.clearMemories() }
+                    }
+                    Button("Clear conversation history", role: .destructive) {
+                        Task { await appViewModel.clearConversation() }
+                    }
+                }
             }
             .navigationTitle("Settings")
             .toolbar {
