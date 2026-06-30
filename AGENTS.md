@@ -14,7 +14,7 @@ This app **requires macOS + Xcode 26.5+** with Apple SDKs. There are no package-
 
 - Run: open `aibotwithfeelings.xcodeproj` in Xcode and Run (⌘R) on a simulator/device.
 - CLI build/test (macOS): `xcodebuild -project aibotwithfeelings.xcodeproj -scheme aibotwithfeelings -destination 'platform=iOS Simulator,name=iPhone 16' build` / `test`.
-- Config before full chat works: set `GEMINI_API_KEY` in `aibotwithfeelings/Info.plist` (replacing `YOUR_GEMINI_API_KEY_HERE`) or as a run-scheme env var (see `aibotwithfeelings/Ava/Config/AvaConfig.swift`); enable the bundled `aibotwithfeelings/Products.storekit` as the scheme's StoreKit configuration for trial/subscription testing. Without a key the app falls back to an offline synthesis path that still calls the live external modules.
+- Config before full chat works: set `GEMINI_API_KEY` in `aibotwithfeelings/Info.plist` (replacing `YOUR_GEMINI_API_KEY_HERE`) or as a run-scheme env var (see `aibotwithfeelings/Ava/Config/AvaConfig.swift`); optionally set `GEMINI_MODEL` if your key has quota for a specific Gemini model. Enable the bundled `aibotwithfeelings/Products.storekit` as the scheme's StoreKit configuration for trial/subscription testing. Without a key the app falls back to an offline synthesis path that still calls the live external modules.
 
 ## Cursor Cloud specific instructions
 
@@ -33,4 +33,4 @@ Non-obvious caveats when running Swift code on Linux (these differences are why 
 
 To exercise the full Gemini synthesis path (not just offline fallback), provide a `GEMINI_API_KEY` (env var is picked up by `AvaConfig`); without it the live weather/news/Wikipedia/quote modules still run and the app uses offline synthesis. Two non-obvious gotchas observed when wiring up the key:
 - `AvaConfig` reads the env var named exactly `GEMINI_API_KEY`. On the Cloud VM the secret is injected under its secret name, so the secret must be named `GEMINI_API_KEY` (not, e.g., the repo name) for `AvaConfig` to find it — otherwise map it manually for the harness (`GEMINI_API_KEY="$othername" ./ava`).
-- The app hardcodes `AvaConfig.geminiModel = "gemini-2.0-flash"`. A standard AI-Studio key's project can return `Quota exceeded ... limit: 0` for `gemini-2.0-flash` (free tier disabled for that model) while `gemini-flash-latest` / `gemini-2.5-flash` work with the same key. If chat fails with a quota error, the key is fine — the model/billing is the issue (enable billing/quota for that model, or use an available model). Verified end-to-end synthesis succeeds with `gemini-flash-latest`.
+- The default model is `gemini-flash-latest`. A standard AI-Studio key's project can return `Quota exceeded ... limit: 0` for some pinned models while `gemini-flash-latest` / `gemini-2.5-flash` work with the same key. If chat fails with a quota error, the key is fine — the model/billing is the issue (enable billing/quota for that model, or set `GEMINI_MODEL` to an available model).

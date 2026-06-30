@@ -6,6 +6,8 @@ final class AvaBrain: ObservableObject {
     @Published private(set) var phase: AvaThinkingPhase = .idle
 
     private let intentAnalyzer = IntentAnalyzer()
+    private let safetyBoundary = AvaSafetyBoundary()
+    private let antiEchoFilter = AvaAntiEchoFilter()
     private let gemini = GeminiService()
     private let tools: [any ExternalTool] = [
         WebSearchTool(),
@@ -18,6 +20,15 @@ final class AvaBrain: ObservableObject {
 
     func respond(to userMessage: String, history: [ChatMessage], character: AICharacter) async throws -> ChatMessage {
         phase = .analyzing
+        defer { phase = .idle }
+
+        if case .crisis(let crisisResponse) = safetyBoundary.assess(userMessage) {
+            return ChatMessage(
+                role: .ava,
+                content: crisisResponse,
+                toolsUsed: ["Safety Boundary"]
+            )
+        }
 
         let selection = intentAnalyzer.analyze(userMessage)
         let activeTools = tools.filter { selection.tools.contains($0.kind) }
@@ -41,11 +52,11 @@ final class AvaBrain: ObservableObject {
             responseText = offlineResponse(for: userMessage, intel: intel, character: character)
         }
 
-        phase = .idle
+        let cleanedResponseText = antiEchoFilter.cleanedReply(responseText, userMessage: userMessage)
 
         return ChatMessage(
             role: .ava,
-            content: responseText,
+            content: cleanedResponseText.isEmpty ? responseText : cleanedResponseText,
             toolsUsed: intel.map(\.tool.rawValue)
         )
     }

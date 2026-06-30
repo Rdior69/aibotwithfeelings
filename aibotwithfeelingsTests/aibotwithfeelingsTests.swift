@@ -120,3 +120,63 @@ struct AICharacterTests {
     #expect(!character.isValid)
   }
 }
+
+struct AvaAntiEchoFilterTests {
+
+  private let filter = AvaAntiEchoFilter()
+
+  @Test func removesDirectUserMessageEcho() {
+    let reply = "I feel stuck in my career and I don't know what to do. The sharper truth is that stuck usually means one value is being overfed and another is starving."
+    let cleaned = filter.cleanedReply(reply, userMessage: "I feel stuck in my career and I don't know what to do")
+    #expect(cleaned.hasPrefix("The sharper truth"))
+  }
+
+  @Test func removesBannedEchoOpeners() {
+    let reply = "It sounds like you're exhausted. Tiny brutal move: protect one hour tonight like it belongs to someone you love."
+    let cleaned = filter.cleanedReply(reply, userMessage: "I'm exhausted")
+    #expect(cleaned.hasPrefix("Tiny brutal move"))
+  }
+
+  @Test func preservesSubstantiveReplies() {
+    let reply = "Tiny brutal move: protect one hour tonight like it belongs to someone you love."
+    let cleaned = filter.cleanedReply(reply, userMessage: "I'm exhausted")
+    #expect(cleaned == reply)
+  }
+}
+
+struct AvaSafetyBoundaryTests {
+
+  private let boundary = AvaSafetyBoundary()
+
+  @Test func flagsHighRiskSelfHarmMessages() {
+    let assessment = boundary.assess("I want to kill myself tonight")
+
+    if case .crisis(let message) = assessment {
+      #expect(message.contains("988"))
+      #expect(message.contains("emergency services"))
+    } else {
+      Issue.record("Expected a crisis assessment")
+    }
+  }
+
+  @Test func allowsLowRiskSadnessMessages() {
+    #expect(boundary.assess("I feel sad and lonely today") == .allow)
+  }
+}
+
+struct AvaBrainSafetyTests {
+
+  @MainActor
+  @Test func crisisMessagesBypassGeminiAndExternalTools() async throws {
+    let brain = AvaBrain()
+    let response = try await brain.respond(
+      to: "I want to end my life",
+      history: [],
+      character: .ava
+    )
+
+    #expect(response.toolsUsed == ["Safety Boundary"])
+    #expect(response.content.contains("988"))
+    #expect(brain.phase == .idle)
+  }
+}

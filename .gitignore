@@ -1,0 +1,24 @@
+# Xcode
+DerivedData/
+build/
+*.xcresult
+*.xccovreport
+*.xccovarchive
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# User-specific Xcode state
+xcuserdata/
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Secrets and local overrides
+.env
+*.local

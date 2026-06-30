@@ -15,7 +15,18 @@ enum AvaConfig {
 
     static var hasAPIKey: Bool { !geminiAPIKey.isEmpty }
 
-    static let geminiModel = "gemini-2.0-flash"
+    /// Override with `GEMINI_MODEL` when a key has quota for a specific Gemini model.
+    static var geminiModel: String {
+        if let model = Bundle.main.object(forInfoDictionaryKey: "GEMINI_MODEL") as? String,
+           !model.isEmpty {
+            return model
+        }
+        if let model = ProcessInfo.processInfo.environment["GEMINI_MODEL"], !model.isEmpty {
+            return model
+        }
+        return "gemini-flash-latest"
+    }
+
     static let geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models"
     static let maxHistoryMessages = 24
 }

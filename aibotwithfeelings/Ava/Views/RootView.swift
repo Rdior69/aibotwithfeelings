@@ -36,6 +36,13 @@ struct RootView: View {
             .tabItem {
                 Label("Characters", systemImage: "person.2.fill")
             }
+
+            NavigationStack {
+                SettingsView()
+            }
+            .tabItem {
+                Label("Settings", systemImage: "gearshape.fill")
+            }
         }
     }
 }
