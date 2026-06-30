@@ -8,17 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(AppSettings.self) private var settings
+
+    @State private var showOnboarding = false
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if showOnboarding {
+                OnboardingView {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        showOnboarding = false
+                    }
+                }
+                .transition(.asymmetric(
+                    insertion: .opacity,
+                    removal: .move(edge: .bottom).combined(with: .opacity)
+                ))
+            } else {
+                ChatView(settings: settings)
+                    .transition(.opacity)
+            }
         }
-        .padding()
+        .onAppear {
+            showOnboarding = !settings.hasCompletedOnboarding
+        }
+        .preferredColorScheme(settings.colorSchemePreference.colorScheme)
     }
 }
 
 #Preview {
     ContentView()
+        .environment(AppSettings())
+        .modelContainer(for: Message.self, inMemory: true)
 }
