@@ -10,16 +10,11 @@ struct ChatView: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Your companion is ready")
-                    .font(.headline)
-                    .accessibilityIdentifier("chat.title")
-                Text("Current tone: \(viewModel.currentEmotion.label.rawValue.capitalized)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
+            Text("Your companion is ready")
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("chat.title")
+                .padding(.horizontal)
 
             Divider()
 

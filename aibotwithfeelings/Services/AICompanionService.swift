@@ -70,7 +70,7 @@ struct MockAICompanionService: AICompanionServing {
             prefix = "Noted, \(name). Let us focus on what helps next."
         }
 
-        let response = "\(prefix) \(nextEmotion.summary) Last important note: \(memoryLine)"
+        let response = "\(prefix) \(memoryLine)"
         let memoryCandidate = trimmedMessage.count > 24 ? trimmedMessage : nil
 
         return AIReply(text: response, emotion: nextEmotion, memoryCandidate: memoryCandidate)
