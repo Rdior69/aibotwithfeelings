@@ -47,6 +47,13 @@ final class ChatViewModel {
         messages.append(ChatMessage(role: .user, text: text))
         isResponding = true
 
+        let safety = SafetyFilter.evaluate(text)
+        if let safetyMessage = safety.userFacingMessage {
+            messages.append(ChatMessage(role: .system, text: safetyMessage))
+            isResponding = false
+            return
+        }
+
         do {
             let memories = await memoryStore.recentMemories(limit: 3)
             let reply = try await aiService.generateReply(

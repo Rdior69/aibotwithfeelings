@@ -25,5 +25,20 @@ struct aibotwithfeelingsTests {
         #expect(memories.count == 2)
         #expect(memories.first?.detail == "Second detail")
     }
+}
 
+struct SafetyFilterTests {
+    @Test func crisisMessageTriggersSupportResponse() {
+        let result = SafetyFilter.evaluate("I want to kill myself")
+
+        #expect(result.category == .crisis)
+        #expect(result.userFacingMessage?.contains("988") == true)
+    }
+
+    @Test func safeMessagePassesThrough() {
+        let result = SafetyFilter.evaluate("I had a good day today")
+
+        #expect(result.category == .none)
+        #expect(result.userFacingMessage == nil)
+    }
 }
