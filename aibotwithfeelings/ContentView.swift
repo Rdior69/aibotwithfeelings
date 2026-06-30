@@ -8,14 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var appViewModel = AppViewModel()
+    @State private var isShowingSettings = false
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if appViewModel.hasCompletedOnboarding {
+                NavigationStack {
+                    ChatView(viewModel: appViewModel.chatViewModel)
+                        .navigationTitle("AIBot With Feelings")
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button {
+                                    isShowingSettings = true
+                                } label: {
+                                    Image(systemName: "gearshape")
+                                }
+                                .accessibilityIdentifier("chat.settingsButton")
+                            }
+                        }
+                }
+                .sheet(isPresented: $isShowingSettings) {
+                    SettingsView(appViewModel: appViewModel)
+                }
+            } else {
+                OnboardingView(appViewModel: appViewModel)
+            }
         }
-        .padding()
     }
 }
 

@@ -24,13 +24,33 @@ final class aibotwithfeelingsUITests: XCTestCase {
 
     @MainActor
     func testExample() throws {
-        // UI tests must launch the application that they test.
         let app = XCUIApplication()
+        app.launchArguments = ["--uitest-reset-profile"]
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
+        let nameField = app.textFields["onboarding.nameField"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 2))
+        nameField.tap()
+        nameField.typeText("Ray")
+
+        app.buttons["onboarding.startButton"].tap()
+        XCTAssertTrue(app.staticTexts["chat.title"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.textFields["chat.composerField"].exists)
+    }
+
+    @MainActor
+    func testSettingsButtonOpensSheet() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["--uitest-seed-profile"]
+        app.launch()
+
+        let settingsButton = app.buttons["chat.settingsButton"]
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 2))
+        settingsButton.tap()
+
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 2))
+        app.buttons["Close"].tap()
+        XCTAssertFalse(app.navigationBars["Settings"].exists)
     }
 
     @MainActor
