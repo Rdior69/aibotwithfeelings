@@ -2,23 +2,43 @@
 //  ContentView.swift
 //  aibotwithfeelings
 //
-//  Created by ray dior on 5/29/26.
+//  Root router: shows onboarding until it's complete, then the main tabbed
+//  experience (Chat, Memories, Settings).
 //
 
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var appState: AppState
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if appState.hasCompletedOnboarding {
+                MainTabView()
+                    .transition(.opacity)
+            } else {
+                OnboardingView()
+                    .transition(.opacity)
+            }
         }
-        .padding()
+        .animation(.easeInOut, value: appState.hasCompletedOnboarding)
+    }
+}
+
+struct MainTabView: View {
+    var body: some View {
+        TabView {
+            ChatView()
+                .tabItem { Label("Chat", systemImage: "bubble.left.and.bubble.right.fill") }
+            MemoriesView()
+                .tabItem { Label("Memories", systemImage: "brain.head.profile") }
+            SettingsView()
+                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+        }
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(AppState())
 }
