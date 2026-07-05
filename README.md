@@ -22,11 +22,36 @@ A SwiftUI companion app foundation that now includes:
 - `aibotwithfeelings/ViewModels`: app state router and chat state manager.
 - `aibotwithfeelings/Views`: onboarding, chat, and settings screens.
 
+## Development
+
+### Xcode (macOS)
+
+Open `aibotwithfeelings.xcodeproj` and run on a simulator or device. The shared `aibotwithfeelings` scheme is checked in for CLI and CI use:
+
+```bash
+xcodebuild test \
+  -project aibotwithfeelings.xcodeproj \
+  -scheme aibotwithfeelings \
+  -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
+  -only-testing:aibotwithfeelingsTests
+```
+
+### Swift Package Manager (Linux CI / headless core)
+
+The root `Package.swift` exposes core logic as `AIBotCompanionCore` so models, services, and safety filters can be built and tested without Xcode:
+
+```bash
+swift build --target AIBotCompanionCore
+swift test --filter AIBotCompanionCoreTests
+```
+
+See [AGENTS.md](AGENTS.md) for Cloud Agent and CI details.
+
 ## Next Steps
 
 See [ROADMAP.md](ROADMAP.md) for milestones, backlog, and technical debt. Current priorities:
 
-1. Complete repository governance (M0 — Issue #11).
-2. Fix CI and add SPM core testing (M1 — PR #10, after M0).
+1. ~~Complete repository governance (M0 — Issue #11).~~ Done
+2. Establish SPM and CI foundation (M1 — Issue #20).
 3. Integrate live AI backend and conversation persistence (M2 — PR #9).
 4. Expand test coverage and App Store readiness (M3–M5).

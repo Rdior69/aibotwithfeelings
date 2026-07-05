@@ -41,4 +41,4 @@
 ## Deployment Prep
 - Add App Store icon set assets.
 - Confirm signing/team settings for release pipeline.
-- Add shared scheme + CI `xcodebuild test` execution.
+- ~~Add shared scheme + CI `xcodebuild test` execution.~~ Done — shared scheme, SPM core tests, and dual Linux/iOS Simulator CI (M1).
