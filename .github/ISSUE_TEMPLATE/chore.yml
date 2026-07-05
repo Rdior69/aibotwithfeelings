@@ -1,0 +1,41 @@
+name: Chore
+description: Tooling, CI, repository hygiene, or maintenance
+title: "chore: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For repository hygiene, CI, and non-feature work. See [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What needs to be done?
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is this necessary?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] …
+    validations:
+      required: true
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: What this issue explicitly does NOT include
+    validations:
+      required: false

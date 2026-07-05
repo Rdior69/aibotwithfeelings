@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contributing Guide
+    url: https://github.com/Rdior69/aibotwithfeelings/blob/main/CONTRIBUTING.md
+    about: Read the development workflow before opening an issue
+  - name: Technical Roadmap
+    url: https://github.com/Rdior69/aibotwithfeelings/blob/main/ROADMAP.md
+    about: Architecture, milestones, backlog, and technical debt
