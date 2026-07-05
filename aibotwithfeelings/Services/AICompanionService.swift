@@ -11,7 +11,7 @@ struct AIReply {
     let memoryCandidate: String?
 }
 
-enum AIServiceError: LocalizedError {
+enum AIServiceError: LocalizedError, Equatable {
     case emptyInput
     case networkFailure
     case providerFailure(statusCode: Int)
