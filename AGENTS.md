@@ -49,6 +49,6 @@ Apple-framework files (`ViewModels/`, `Views/`, `ContentView.swift`, `aibotwithf
 GitHub Actions runs two jobs on every push/PR to `main`:
 
 1. **linux-core-tests** — `swift test` against `AIBotCompanionCore`
-CI selects the newest installed Xcode (preferring 26.5 for the app's deployment target) and resolves an available iPhone iOS Simulator dynamically on `macos-latest`.
+2. **ios-xcode-tests** — `xcodebuild test` on `macos-26` with Xcode 26.5 and an iPhone 17 iOS 26.5 Simulator
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [ROADMAP.md](ROADMAP.md) for workflow and milestones.
