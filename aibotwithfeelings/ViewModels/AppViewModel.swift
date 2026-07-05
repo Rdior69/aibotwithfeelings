@@ -14,17 +14,17 @@ final class AppViewModel {
 
     let chatViewModel: ChatViewModel
 
-    private let profileStore: LocalProfileStore
+    private let backend: CompanionBackend
 
-    init(
-        profileStore: LocalProfileStore = LocalProfileStore(),
-        aiService: AICompanionServing = MockAICompanionService(),
-        memoryStore: CompanionMemoryStoring = InMemoryCompanionMemoryStore()
-    ) {
-        self.profileStore = profileStore
+    init(backend: CompanionBackend = CompanionBackend.make()) {
+        self.backend = backend
 
         if ProcessInfo.processInfo.arguments.contains("--uitest-reset-profile") {
-            profileStore.clear()
+            backend.profileStore.clear()
+            Task {
+                await backend.conversationStore.clear()
+                await backend.memoryStore.clear()
+            }
         }
 
         if ProcessInfo.processInfo.arguments.contains("--uitest-seed-profile") {
@@ -34,15 +34,16 @@ final class AppViewModel {
                 checkInEnabled: false,
                 memoryEnabled: true
             )
-            profileStore.save(seeded)
+            backend.profileStore.save(seeded)
         }
 
-        let loadedProfile = profileStore.load()
+        let loadedProfile = backend.profileStore.load()
         self.profile = loadedProfile
         self.hasCompletedOnboarding = loadedProfile != nil
         self.chatViewModel = ChatViewModel(
-            aiService: aiService,
-            memoryStore: memoryStore,
+            aiService: backend.aiService,
+            memoryStore: backend.memoryStore,
+            conversationStore: backend.conversationStore,
             profile: loadedProfile
         )
     }
@@ -50,13 +51,21 @@ final class AppViewModel {
     func completeOnboarding(profile: UserProfile) {
         self.profile = profile
         hasCompletedOnboarding = true
-        profileStore.save(profile)
+        backend.profileStore.save(profile)
         chatViewModel.updateProfile(profile)
     }
 
     func updateProfile(_ profile: UserProfile) {
         self.profile = profile
-        profileStore.save(profile)
+        backend.profileStore.save(profile)
         chatViewModel.updateProfile(profile)
+    }
+
+    func clearMemories() async {
+        await backend.memoryStore.clear()
+    }
+
+    func clearConversation() async {
+        await chatViewModel.clearConversation()
     }
 }

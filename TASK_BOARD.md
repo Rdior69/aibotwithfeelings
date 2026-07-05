@@ -22,13 +22,12 @@
 - None of the original code needed deep refactor; only the placeholder `ContentView` needed replacement with routed feature views.
 
 ## Next Build Priority
-1. Integrate a real AI provider behind `AICompanionServing`.
-2. Add safety policy interception before response generation.
-3. Add persistent conversation history (beyond in-memory key moments).
-4. Expand QA with model/service failure-path tests.
+1. Add Settings UI for clearing memories and conversation history.
+2. Implement daily check-in scheduling from profile preferences.
+3. Expand QA with additional failure-path tests for HTTP AI provider.
 
 ## Testing Required
-- Unit tests for emotion transition and memory ordering.
+- Unit tests for emotion transition, memory ordering, persistence, safety policies, and chat flow.
 - UI tests for onboarding to chat transition and settings presentation.
 - Device-level validation on macOS with Xcode/iOS Simulator.
 

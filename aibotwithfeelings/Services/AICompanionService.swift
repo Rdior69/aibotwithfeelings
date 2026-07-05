@@ -11,13 +11,22 @@ struct AIReply {
     let memoryCandidate: String?
 }
 
-enum AIServiceError: LocalizedError {
+enum AIServiceError: LocalizedError, Equatable {
     case emptyInput
+    case networkFailure
+    case providerFailure(statusCode: Int)
+    case emptyResponse
 
     var errorDescription: String? {
         switch self {
         case .emptyInput:
             return "I didn't catch a message to respond to."
+        case .networkFailure:
+            return "The AI service could not be reached."
+        case .providerFailure(let statusCode):
+            return "The AI service returned an error (HTTP \(statusCode))."
+        case .emptyResponse:
+            return "The AI service returned an empty response."
         }
     }
 }
@@ -45,16 +54,7 @@ struct MockAICompanionService: AICompanionServing {
 
         try await Task.sleep(for: .milliseconds(350))
 
-        let normalized = trimmedMessage.lowercased()
-        let signal: EmotionSignal
-        if normalized.contains("sad") || normalized.contains("anxious") || normalized.contains("stressed") {
-            signal = .negative
-        } else if normalized.contains("happy") || normalized.contains("great") || normalized.contains("excited") {
-            signal = .positive
-        } else {
-            signal = .uncertain
-        }
-
+        let signal = EmotionSignalDetector.detect(in: trimmedMessage)
         let nextEmotion = EmotionEngine.nextState(from: currentEmotion, signal: signal)
         let memoryLine = memories.first?.detail ?? "I am still learning what matters most to you."
         let tone = profile?.preferredTone ?? .supportive
