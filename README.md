@@ -32,7 +32,7 @@ Open `aibotwithfeelings.xcodeproj` and run on a simulator or device. The shared 
 xcodebuild test \
   -project aibotwithfeelings.xcodeproj \
   -scheme aibotwithfeelings \
-  -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' \
   -only-testing:aibotwithfeelingsTests
 ```
 

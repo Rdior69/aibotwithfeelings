@@ -18,7 +18,7 @@ The full app **requires macOS + Xcode** with Apple SDKs.
   xcodebuild test \
     -project aibotwithfeelings.xcodeproj \
     -scheme aibotwithfeelings \
-    -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
+    -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' \
     -only-testing:aibotwithfeelingsTests
   ```
 
