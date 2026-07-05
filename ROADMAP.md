@@ -1,7 +1,7 @@
 # AIBotWithFeelings — Technical Roadmap
 
 Living document maintained by the project CTO after every merged feature.
-Last updated: 2026-07-05 (M0 governance foundation in progress)
+Last updated: 2026-07-05 (M0 governance foundation **complete** — PR #12)
 
 ---
 
@@ -40,7 +40,7 @@ aibotwithfeelings/
 
 | Stage | Status | Exit criteria |
 |-------|--------|---------------|
-| **Pre-Alpha** | **Current** | Governance (M0), CI green, backend merged |
+| **Pre-Alpha** | **Current** | CI green (M1), backend merged (M2) — M0 governance complete |
 | Alpha | Planned | Live AI optional, persistence, CI green on all paths |
 | Beta | Planned | Test coverage, privacy manifest, security review |
 | v1.0 | Planned | App Store assets, performance audit, release checklist |
@@ -57,6 +57,7 @@ aibotwithfeelings/
 - [x] Safety filter (crisis / harassment boundaries)
 - [x] Settings sheet for profile updates
 - [x] Basic unit and UI tests
+- [x] Repository governance foundation (M0 — PR #12): ROADMAP, CONTRIBUTING, issue/PR templates
 
 ---
 
@@ -64,9 +65,15 @@ aibotwithfeelings/
 
 | Issue | Title | Status |
 |-------|-------|--------|
-| #11 | chore: establish repository governance foundation | In progress (M0) |
+| #13 | chore: enable branch protection on main | Open |
+| #14 | chore: apply GitHub label taxonomy | Open |
+| #15 | chore: create GitHub milestones M0-M5 | Open |
+| #16 | chore: close superseded open pull requests | Open |
+| #17 | chore: cleanup stale remote branches | Open |
 
-> Prior work (PRs #1–#10) has no linked standalone issues. Retroactive issues are a post-M0 follow-up.
+**Recently completed:** #11 (M0 governance — PR #12 merged 2026-07-05)
+
+> Prior work (PRs #1–#10) has no linked standalone issues. Retroactive issues remain a backlog item.
 
 ---
 
@@ -89,7 +96,7 @@ aibotwithfeelings/
 
 | Milestone | Goal | Key deliverables |
 |-----------|------|------------------|
-| **M0: Governance** | Enforce Issue → PR workflow | ROADMAP, CONTRIBUTING, templates (this issue) |
+| **M0: Governance** | Enforce Issue → PR workflow | ✅ ROADMAP, CONTRIBUTING, templates (PR #12) |
 | **M1: Infra + CI** | Green CI, SPM core | PR #10 + consolidated workflow |
 | **M2: Backend** | Live AI + persistence | PR #9 |
 | **M3: App polish** | Memories, test coverage | Salvage from archived PR #6 |
@@ -98,15 +105,16 @@ aibotwithfeelings/
 
 ---
 
-## Backlog (proposed — create as issues after M0)
+## Backlog
 
-| Priority | Proposed issue |
+| Priority | Issue / work |
 |----------|----------------|
-| P0 | `chore: apply GitHub labels and milestones` |
-| P0 | `chore: enable branch protection on main` |
-| P0 | `chore: close superseded open pull requests` |
-| P1 | `chore: cleanup stale remote branches` |
-| P1 | `chore: SPM core library + dual CI pipeline` (PR #10) |
+| P0 | #14 — apply GitHub label taxonomy |
+| P0 | #15 — create GitHub milestones M0–M5 |
+| P0 | #13 — enable branch protection on main |
+| P0 | #16 — close superseded open pull requests |
+| P1 | #17 — cleanup stale remote branches |
+| P1 | `chore: SPM core library + dual CI pipeline` (PR #10 — **next after M0 follow-ups**) |
 | P1 | `feature: AI backend framework + persistence` (PR #9) |
 | P2 | `feature: port Memories tab from archived core-engine-v1` |
 | P2 | `feature: Apple Intelligence integration` (from archived PR #5) |
@@ -119,10 +127,9 @@ aibotwithfeelings/
 | Item | Severity | Owner milestone |
 |------|----------|-----------------|
 | CI broken on `main` (`Package.swift` missing) | P0 | M1 |
-| No branch protection | P0 | M0 follow-up |
-| No standalone issues before M0 | P0 | M0 (this issue) |
-| 12+ stale remote branches | P1 | M0 follow-up |
-| `TASK_BOARD.md` stale | P1 | M0 (deprecated → ROADMAP) |
+| No branch protection | P0 | #13 |
+| 12+ stale remote branches | P1 | #17 |
+| `TASK_BOARD.md` stale | P1 | Deprecated → ROADMAP (removal backlog) |
 | No shared Xcode scheme on `main` | P1 | M1 |
 | Mock-only AI | P2 | M2 |
 | No conversation persistence on `main` | P2 | M2 |
@@ -152,14 +159,14 @@ aibotwithfeelings/
 
 ## Repository Health
 
-| Dimension | Score (2026-07-05 audit) | Target after M0+M1 |
-|-----------|--------------------------|---------------------|
-| Commit message quality | 68% | 75% |
-| Branch organization | 28% | 60% |
-| Issue tracking | 8% | 80% |
-| PR hygiene | 42% | 70% |
-| Naming consistency | 12% | 50% |
-| **Overall** | **33%** | **65%** |
+| Dimension | Pre-M0 (audit) | Post-M0 (2026-07-05) | Target after M1 |
+|-----------|----------------|----------------------|-----------------|
+| Commit message quality | 68% | 68% | 75% |
+| Branch organization | 28% | 35% | 60% |
+| Issue tracking | 8% | 45% | 80% |
+| PR hygiene | 42% | 55% | 70% |
+| Naming consistency | 12% | 15% | 50% |
+| **Overall** | **33%** | **45%** | **65%** |
 
 ---
 
@@ -170,7 +177,8 @@ aibotwithfeelings/
 | Canonical app architecture = PR #2 (`main`) | **Active** | Models/Services/ViewModels/Views |
 | Mood UI hidden from users | **Active** | PR #7 merged |
 | Ava product line | **Deferred** | Awaiting Option A/B/C product decision |
-| SPM core + dual CI | **Planned** | PR #10 after M0 |
+| SPM core + dual CI | **Planned** | PR #10 — next engineering milestone (M1) |
+| Repository governance (M0) | **Complete** | PR #12 merged 2026-07-05 |
 | CODEOWNERS | **Deferred** | Follow-up with branch protection |
 
 ---
