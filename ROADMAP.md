@@ -74,8 +74,8 @@ Tests/               AIBotCompanionCoreTests (SPM / Linux headless)
 | #13 | chore: enable branch protection on main | Open |
 | #14 | chore: apply GitHub label taxonomy | Open |
 | #15 | chore: create GitHub milestones M0-M5 | Open |
-| #16 | chore: close superseded open pull requests | Open |
-| #17 | chore: cleanup stale remote branches | Open |
+| #16 | chore: close superseded open pull requests | Open — #4–#8 pending manual close |
+| #17 | chore: cleanup stale remote branches | Open — 12 branches deleted; verify complete |
 | #22 | refactor: resolve MainActor isolation warning in InMemoryCompanionMemoryStore | Open (M2 backlog) |
 
 **Recently completed:** #20 (M1 SPM + CI — PR #21), #11 (M0 governance — PR #12)
@@ -86,11 +86,13 @@ Tests/               AIBotCompanionCoreTests (SPM / Linux headless)
 
 ## Open Pull Requests
 
-| PR | Branch | Purpose | CTO disposition |
-|----|--------|---------|-----------------|
-| #9 | `cursor/backend-framework-0c56` | AI backend + persistence (reference) | Port via M2A–M2D; close as superseded in M2D |
+| PR | Branch | Purpose | Status |
+|----|--------|---------|--------|
+| #24 | `cursor/repository-hygiene-m2-prep-51b6` | ROADMAP hygiene + M2 phase plan | Open — merge pending approval |
+| #9 | `cursor/backend-framework-0c56` | Full backend (reference) | Open — port via M2A–M2D; close in M2D |
 
-**Closed (hygiene):** #4, #5, #6, #8 (stale architectures), #10 (superseded by PR #21).
+**Pending manual close** (branches deleted; Issue #16): #4, #5, #6, #8  
+**Closed:** #10 (superseded by PR #21)
 
 ---
 
@@ -127,7 +129,8 @@ Each phase follows: Issue → Discovery → Planning → Approval → Branch →
 | P0 | #14 — apply GitHub label taxonomy |
 | P0 | #15 — create GitHub milestones M0-M5 |
 | P0 | #13 — enable branch protection on main |
-| P1 | #17 — verify orphan branch cleanup complete |
+| P1 | #16 — close superseded PRs #4, #5, #6, #8 (manual) |
+| P1 | Merge PR #24 — ROADMAP hygiene for Release Prep |
 | P1 | M2A — AI backend foundation (after hygiene + Discovery approval) |
 | P2 | #22 — MainActor isolation warning in InMemoryCompanionMemoryStore |
 | P2 | `feature: port Memories tab from archived core-engine-v1` |
