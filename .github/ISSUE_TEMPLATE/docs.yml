@@ -1,0 +1,35 @@
+name: Documentation
+description: Improve or add project documentation
+title: "docs: "
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Documentation-only changes. See [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What should be documented?
+    validations:
+      required: true
+
+  - type: textarea
+    id: audience
+    attributes:
+      label: Audience
+      description: Who is this documentation for?
+      placeholder: Contributors, users, release engineers, etc.
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] …
+    validations:
+      required: true

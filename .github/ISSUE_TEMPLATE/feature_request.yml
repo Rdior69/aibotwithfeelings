@@ -1,0 +1,47 @@
+name: Feature Request
+description: Propose a new capability for AIBotWithFeelings
+title: "feature: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Open a feature issue **before** writing code. See [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What should this feature do and why?
+      placeholder: As a user, I want…
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How do we know this is done?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / out of scope
+      description: What is explicitly not included?
+    validations:
+      required: false
+
+  - type: textarea
+    id: architecture
+    attributes:
+      label: Affected modules
+      description: Which parts of the codebase are affected?
+      placeholder: Models/, Services/, Views/, CI, etc.
+    validations:
+      required: false

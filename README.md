@@ -1,5 +1,12 @@
 # AIBotWithFeelings
 
+A SwiftUI companion app with emotional awareness, safety boundaries, and on-device companion logic.
+
+**Contributing:** see [CONTRIBUTING.md](CONTRIBUTING.md)  
+**Roadmap & architecture:** see [ROADMAP.md](ROADMAP.md)
+
+## Features (on `main`)
+
 A SwiftUI companion app foundation that now includes:
 
 - Onboarding for name, tone, memory, and check-in preferences.
@@ -17,7 +24,9 @@ A SwiftUI companion app foundation that now includes:
 
 ## Next Steps
 
-1. Swap `MockAICompanionService` for a production AI backend implementation.
-2. Add safety policy checks for crisis and over-attachment boundaries.
-3. Persist full conversation history and memory controls.
-4. Run and expand UI/unit tests on macOS with Xcode.
+See [ROADMAP.md](ROADMAP.md) for milestones, backlog, and technical debt. Current priorities:
+
+1. Complete repository governance (M0 — Issue #11).
+2. Fix CI and add SPM core testing (M1 — PR #10, after M0).
+3. Integrate live AI backend and conversation persistence (M2 — PR #9).
+4. Expand test coverage and App Store readiness (M3–M5).

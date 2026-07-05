@@ -1,5 +1,11 @@
 # AIBotWithFeelings Task Board
 
+> **Deprecated:** This file is no longer the source of truth for project status.
+> Use **[ROADMAP.md](ROADMAP.md)** for architecture, milestones, backlog, and technical debt.
+> Use **[CONTRIBUTING.md](CONTRIBUTING.md)** for the development workflow.
+>
+> This file is retained temporarily for historical reference and will be removed in a future chore issue.
+
 ## Already Built
 - Xcode app target + unit/UI test targets.
 - SwiftUI app entrypoint and project wiring.
