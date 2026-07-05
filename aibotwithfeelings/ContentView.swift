@@ -18,7 +18,7 @@ struct ContentView: View {
                     ChatView(viewModel: appViewModel.chatViewModel)
                         .navigationTitle("AIBot With Feelings")
                         .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
+                            ToolbarItem(placement: .platformTrailing) {
                                 Button {
                                     isShowingSettings = true
                                 } label: {

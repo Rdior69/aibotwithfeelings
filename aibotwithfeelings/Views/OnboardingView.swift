@@ -24,7 +24,9 @@ struct OnboardingView: View {
 
                 Section("Your profile") {
                     TextField("Name", text: $name)
+#if os(iOS)
                         .textInputAutocapitalization(.words)
+#endif
                         .accessibilityIdentifier("onboarding.nameField")
 
                     Picker("Companion tone", selection: $tone) {
