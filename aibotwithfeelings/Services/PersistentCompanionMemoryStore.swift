@@ -6,17 +6,17 @@
 import Foundation
 
 actor PersistentCompanionMemoryStore: CompanionMemoryStoring {
-    private let defaults: UserDefaults
+    private nonisolated(unsafe) let defaults: UserDefaults
     private let key: String
     private let maxItems: Int
     private var items: [MemoryItem]
 
     init(
-        defaults: UserDefaults = .standard,
+        suiteName: String = "com.aibotwithfeelings.memories",
         key: String = "aibot.memories.v1",
         maxItems: Int = 30
     ) {
-        self.defaults = defaults
+        self.defaults = UserDefaults(suiteName: suiteName) ?? .standard
         self.key = key
         self.maxItems = maxItems
 

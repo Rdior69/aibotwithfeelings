@@ -32,13 +32,13 @@ struct aibotwithfeelingsTests {
     }
 
     @Test func persistentMemoryStoreSurvivesReload() async {
-        let defaults = UserDefaults(suiteName: "aibotwithfeelingsTests.memory")!
-        defaults.removePersistentDomain(forName: "aibotwithfeelingsTests.memory")
+        let suiteName = "aibotwithfeelingsTests.memory"
+        UserDefaults(suiteName: suiteName)?.removePersistentDomain(forName: suiteName)
 
-        let store = PersistentCompanionMemoryStore(defaults: defaults, key: "test.memories")
+        let store = PersistentCompanionMemoryStore(suiteName: suiteName, key: "test.memories")
         await store.remember("Important detail")
 
-        let reloaded = PersistentCompanionMemoryStore(defaults: defaults, key: "test.memories")
+        let reloaded = PersistentCompanionMemoryStore(suiteName: suiteName, key: "test.memories")
         let memories = await reloaded.recentMemories(limit: 5)
 
         #expect(memories.count == 1)
@@ -46,10 +46,10 @@ struct aibotwithfeelingsTests {
     }
 
     @Test func persistentMemoryStoreCapsAtMaxItems() async {
-        let defaults = UserDefaults(suiteName: "aibotwithfeelingsTests.memoryCap")!
-        defaults.removePersistentDomain(forName: "aibotwithfeelingsTests.memoryCap")
+        let suiteName = "aibotwithfeelingsTests.memoryCap"
+        UserDefaults(suiteName: suiteName)?.removePersistentDomain(forName: suiteName)
 
-        let store = PersistentCompanionMemoryStore(defaults: defaults, key: "test.cap", maxItems: 3)
+        let store = PersistentCompanionMemoryStore(suiteName: suiteName, key: "test.cap", maxItems: 3)
         await store.remember("One")
         await store.remember("Two")
         await store.remember("Three")
@@ -61,14 +61,14 @@ struct aibotwithfeelingsTests {
     }
 
     @Test func conversationStorePersistsMessages() async {
-        let defaults = UserDefaults(suiteName: "aibotwithfeelingsTests.conversation")!
-        defaults.removePersistentDomain(forName: "aibotwithfeelingsTests.conversation")
+        let suiteName = "aibotwithfeelingsTests.conversation"
+        UserDefaults(suiteName: suiteName)?.removePersistentDomain(forName: suiteName)
 
-        let store = LocalConversationStore(defaults: defaults, key: "test.conversation")
+        let store = LocalConversationStore(suiteName: suiteName, key: "test.conversation")
         let message = ChatMessage(role: .user, text: "Hello there")
         await store.saveMessages([message])
 
-        let reloaded = LocalConversationStore(defaults: defaults, key: "test.conversation")
+        let reloaded = LocalConversationStore(suiteName: suiteName, key: "test.conversation")
         let messages = await reloaded.loadMessages()
 
         #expect(messages.count == 1)
@@ -180,10 +180,10 @@ struct ChatViewModelTests {
     }
 
     @Test @MainActor func successfulReplyPersistsConversation() async {
-        let defaults = UserDefaults(suiteName: "aibotwithfeelingsTests.chat")!
-        defaults.removePersistentDomain(forName: "aibotwithfeelingsTests.chat")
+        let suiteName = "aibotwithfeelingsTests.chat"
+        UserDefaults(suiteName: suiteName)?.removePersistentDomain(forName: suiteName)
 
-        let conversationStore = LocalConversationStore(defaults: defaults, key: "test.chat")
+        let conversationStore = LocalConversationStore(suiteName: suiteName, key: "test.chat")
         let viewModel = ChatViewModel(
             aiService: MockAICompanionService(),
             memoryStore: InMemoryCompanionMemoryStore(),

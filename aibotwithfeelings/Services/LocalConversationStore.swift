@@ -12,16 +12,16 @@ protocol ConversationStoring: Sendable {
 }
 
 actor LocalConversationStore: ConversationStoring {
-    private let defaults: UserDefaults
+    private nonisolated(unsafe) let defaults: UserDefaults
     private let key: String
     private let maxMessages: Int
 
     init(
-        defaults: UserDefaults = .standard,
+        suiteName: String = "com.aibotwithfeelings.conversation",
         key: String = "aibot.conversation.v1",
         maxMessages: Int = 200
     ) {
-        self.defaults = defaults
+        self.defaults = UserDefaults(suiteName: suiteName) ?? .standard
         self.key = key
         self.maxMessages = maxMessages
     }

@@ -120,6 +120,7 @@ private struct MessageBubbleView: View {
         viewModel: ChatViewModel(
             aiService: MockAICompanionService(),
             memoryStore: InMemoryCompanionMemoryStore(),
+            conversationStore: EphemeralConversationStore(),
             profile: UserProfile.empty
         )
     )
