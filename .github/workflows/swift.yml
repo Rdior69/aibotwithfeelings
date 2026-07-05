@@ -23,11 +23,45 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Select Xcode
+      run: |
+        if [ -d /Applications/Xcode_26.5.app ]; then
+          sudo xcode-select -s /Applications/Xcode_26.5.app/Contents/Developer
+        else
+          XCODE="$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)"
+          if [ -z "$XCODE" ]; then
+            echo "No Xcode installation found"
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+        fi
+        xcodebuild -version
     - name: Build and test
       run: |
+        SIMULATOR_ID="$(
+          python3 - <<'PY'
+        import json, subprocess, sys
+
+        payload = json.loads(subprocess.check_output(
+            ["xcrun", "simctl", "list", "devices", "available", "-j"],
+            text=True,
+        ))
+        runtimes = sorted(
+            (runtime for runtime in payload["devices"] if "iOS" in runtime),
+            reverse=True,
+        )
+        for runtime in runtimes:
+            for device in payload["devices"][runtime]:
+                if device.get("isAvailable") and "iPhone" in device.get("name", ""):
+                    print(device["udid"])
+                    sys.exit(0)
+        sys.exit("No available iPhone iOS Simulator found")
+        PY
+        )"
+        echo "Using iOS Simulator: $SIMULATOR_ID"
         xcodebuild test \
           -project aibotwithfeelings.xcodeproj \
           -scheme aibotwithfeelings \
-          -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' \
+          -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
           -only-testing:aibotwithfeelingsTests \
           CODE_SIGNING_ALLOWED=NO
