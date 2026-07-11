@@ -22,7 +22,7 @@ enum AIServiceError: LocalizedError {
     }
 }
 
-protocol AICompanionServing {
+protocol AICompanionServing: Sendable {
     func generateReply(
         to userMessage: String,
         profile: UserProfile?,
